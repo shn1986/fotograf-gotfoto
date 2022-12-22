@@ -1,0 +1,4 @@
+mysqlclient ~= 2.1.0
+mysql ~= 0.0.3
+wheel
+mysql-connector-python
