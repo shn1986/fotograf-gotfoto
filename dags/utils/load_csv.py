@@ -14,22 +14,22 @@ def fn_load_csv():
             cursor = conn.cursor()
             #loop through the data frame
             for i,row in people_df.iterrows():
-                #here %S means string values 
+                #populate people table 
                 sql = "INSERT INTO people(given_name,family_name,date_of_birth,place_of_birth) VALUES (%s,%s,%s,%s)"
                 cursor.execute(sql, tuple(row))
-                print("Record inserted to people")
+                #print("Record inserted to people")
             for i,row in places_df.iterrows():
-                #here %S means string values 
+                #Populate places table 
                 sql = "INSERT INTO places(city,county,country) VALUES (%s,%s,%s)"
                 cursor.execute(sql, tuple(row))
-                print("Record inserted to places")
+                #print("Record inserted to places")
             # the connection is not auto committed by default, so we must commit to save our changes
             conn.commit()
         sql_query = pd.read_sql_query ('''
-                                        select pl.country country,count(p.given_name) TotalCount
-                                        from people p join places pl 
-                                        on p.place_of_birth=pl.city 
-                                        group by pl.country
+                                        Select pcs.country country,count(ppl.given_name) TotalCount
+                                        from people ppl join places pcs 
+                                        on ppl.place_of_birth=pcs.city 
+                                        group by pcs.country
                                ''', conn)
         df = pd.DataFrame(sql_query, columns = ['country','TotalCount'])
         out = json.loads(df.to_json(orient='values'))
